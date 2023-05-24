@@ -115,10 +115,7 @@ void correlate(int ny, int nx, const float *data, float *result) {
     CHECK(cudaMalloc((void**)&resultGPU, ny * ny * sizeof(float)));
     CHECK(cudaMemcpy(dataGPU, normData.data(), ny * nx * sizeof(float), cudaMemcpyHostToDevice));
 
-    int div4 = ny / 4;
-    int leftovers = ny % 4;
-
-    coefficientKernel<<<ny, div4>>>(resultGPU, dataGPU, ny, nx);
+    coefficientKernel<<<ny, ny>>>(resultGPU, dataGPU, ny, nx);
     CHECK(cudaDeviceSynchronize());
     CHECK(cudaGetLastError());
 
